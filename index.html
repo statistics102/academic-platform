@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة متابعة الأداء الأكاديمي | Academic Performance Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4a6fa5, #2c3e50);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header h2 {
+            font-size: 22px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .header .en {
+            direction: ltr;
+            font-size: 20px;
+            margin-top: 10px;
+            color: #e0e0e0;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .progress-steps {
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #4a6fa5;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background-color: #e8f4ff;
+            border-left-color: #2196F3;
+        }
+        
+        .step.completed {
+            background-color: #f0fff0;
+            border-left-color: #4CAF50;
+        }
+        
+        .step.failed {
+            background-color: #fff0f0;
+            border-left-color: #f44336;
+        }
+        
+        .step-icon {
+            font-size: 24px;
+            margin-left: 15px;
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: white;
+        }
+        
+        .step.completed .step-icon {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .step.failed .step-icon {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .step-info {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .step.en {
+            direction: ltr;
+            text-align: left;
+            border-left: none;
+            border-right: 5px solid #4a6fa5;
+        }
+        
+        .step.en.active {
+            border-right-color: #2196F3;
+        }
+        
+        .step.en.completed {
+            border-right-color: #4CAF50;
+        }
+        
+        .step.en.failed {
+            border-right-color: #f44336;
+        }
+        
+        .step.en .step-icon {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #3d8b40;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .lang-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .platform-info {
+            background-color: #f0f7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #cce0ff;
+            text-align: center;
+        }
+        
+        .platform-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .platform-info p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .hidden-url {
+            font-family: monospace;
+            background-color: #e8f4ff;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            word-break: break-all;
+            color: #2c3e50;
+            font-weight: 500;
+            border: 1px dashed #4a6fa5;
+            display: none;
+        }
+        
+        .show-url-btn {
+            background-color: transparent;
+            color: #4a6fa5;
+            border: 1px solid #4a6fa5;
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .show-url-btn:hover {
+            background-color: #e8f4ff;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        
+        .auto-redirect {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .countdown {
+            font-weight: bold;
+            color: #4a6fa5;
+        }
+        
+        .platform-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .platform-header {
+            background: linear-gradient(to right, #4a6fa5, #2c3e50);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        iframe {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header h2 {
+                font-size: 18px;
+            }
+            
+            .header .en {
+                font-size: 16px;
+            }
+            
+            .step-title {
+                font-size: 16px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+                width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .platform-info h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-frame" id="platformFrame">
+        <div class="platform-header">
+            <button class="back-btn" id="backBtn">
+                <span>← العودة</span>
+                <span class="en">← Back</span>
+            </button>
+            <div>
+                <span>منصة متابعة الأداء الأكاديمي</span>
+                <span class="en">Academic Performance Platform</span>
+            </div>
+            <div style="width: 80px;"></div>
+        </div>
+        <iframe id="platformIframe" title="منصة الأداء الأكاديمي" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
+    </div>
+    
+    <div class="language-toggle">
+        <button class="lang-btn" id="toggleLang">English</button>
+    </div>
+    
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1>منصة متابعة وتقييم الأداء الأكاديمي الذكي</h1>
+            <h2 class="en">Smart Monitoring and Evaluation of Academic Performance</h2>
+        </div>
+        
+        <div class="content">
+            <div class="progress-steps">
+                <div class="step completed" id="step1">
+                    <div class="step-icon">✓</div>
+                    <div class="step-info">
+                        <div class="step-title">فحص اتصال الإنترنت</div>
+                        <div class="step-desc" id="step1-desc">الاتصال بالإنترنت نشط وجاهز للاستخدام</div>
+                    </div>
+                </div>
+                
+                <div class="step en completed" id="step1-en">
+                    <div class="step-icon">✓</div>
+                    <div class="step-info">
+                        <div class="step-title">Check Internet Connection</div>
+                        <div class="step-desc" id="step1-desc-en">Internet connection is active and ready</div>
+                    </div>
+                </div>
+                
+                <div class="step" id="step2">
+                    <div class="step-icon">2</div>
+                    <div class="step-info">
+                        <div class="step-title">الدخول إلى المنصة</div>
+                        <div class="step-desc" id="step2-desc">انقر على الزر للدخول إلى المنصة</div>
+                    </div>
+                </div>
+                
+                <div class="step en" id="step2-en">
+                    <div class="step-icon">2</div>
+                    <div class="step-info">
+                        <div class="step-title">Enter Platform</div>
+                        <div class="step-desc" id="step2-desc-en">Click the button to enter the platform</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="platform-info">
+                <h3>
+                    <span>مرحباً بك في منصة متابعة الأداء الأكاديمي</span>
+                    <span class="en">Welcome to Academic Performance Platform</span>
+                </h3>
+                <p>
+                    <span>منصة ذكية لمتابعة وتقييم الأداء الأكاديمي للطلاب. انقر على الزر أدناه للدخول إلى المنصة مباشرة.</span>
+                    <span class="en">Smart platform for monitoring and evaluating academic performance. Click the button below to enter the platform directly.</span>
+                </p>
+                
+                <div class="hidden-url" id="hiddenUrl">
+                    https://course-pulse-1.preview.emergentagent.com/user
+                </div>
+                
+                <button class="show-url-btn" id="showUrlBtn">
+                    <span>إظهار الرابط</span>
+                    <span class="en">Show URL</span>
+                </button>
+            </div>
+            
+            <div class="auto-redirect" id="autoRedirect">
+                <span>سيتم الدخول تلقائياً خلال <span class="countdown" id="countdown">10</span> ثانية</span>
+                <span class="en" style="display: block; margin-top: 5px;">Auto-entry in <span class="countdown" id="countdown-en">10</span> seconds</span>
+            </div>
+            
+            <div class="controls">
+                <button class="btn-success" id="enterPlatformBtn">
+                    <span>الدخول إلى المنصة</span>
+                    <span class="en">Enter Platform</span>
+                </button>
+                <button class="btn-secondary" id="cancelBtn" style="display: none;">
+                    <span>إلغاء العد التنازلي</span>
+                    <span class="en">Cancel Countdown</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>منصة تقرير التقدم الدراسي - نظام متابعة وتقييم الأداء الأكاديمي الذكي</p>
+            <p class="en">Academic Progress Report Platform - Smart Academic Performance Monitoring and Evaluation System</p>
+        </div>
+    </div>
+
+    <script>
+        let isArabic = true;
+        const toggleLangBtn = document.getElementById('toggleLang');
+        const enterPlatformBtn = document.getElementById('enterPlatformBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const countdownElement = document.getElementById('countdown');
+        const countdownEnElement = document.getElementById('countdown-en');
+        const autoRedirectDiv = document.getElementById('autoRedirect');
+        const showUrlBtn = document.getElementById('showUrlBtn');
+        const hiddenUrl = document.getElementById('hiddenUrl');
+        const mainContainer = document.getElementById('mainContainer');
+        const platformFrame = document.getElementById('platformFrame');
+        const platformIframe = document.getElementById('platformIframe');
+        const backBtn = document.getElementById('backBtn');
+        
+        let countdown = 10;
+        let countdownInterval;
+        let autoRedirectActive = true;
+        const platformUrl = 'https://course-pulse-1.preview.emergentagent.com/user';
+        
+        toggleLangBtn.addEventListener('click', function() {
+            isArabic = !isArabic;
+            
+            if (isArabic) {
+                document.documentElement.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+                toggleLangBtn.textContent = 'English';
+                
+                document.querySelectorAll('.en').forEach(el => {
+                    if (!el.classList.contains('step')) {
+                        el.style.display = 'none';
+                    }
+                });
+                document.querySelectorAll('.step.en').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.step:not(.en)').forEach(el => el.style.display = 'flex');
+                
+                enterPlatformBtn.innerHTML = '<span>الدخول إلى المنصة</span>';
+                showUrlBtn.innerHTML = '<span>إظهار الرابط</span>';
+                if (cancelBtn.style.display !== 'none') {
+                    cancelBtn.innerHTML = '<span>إلغاء العد التنازلي</span>';
+                }
+                backBtn.innerHTML = '<span>← العودة</span><span class="en">← Back</span>';
+            } else {
+                document.documentElement.dir = 'ltr';
+                document.documentElement.lang = 'en';
+                toggleLangBtn.textContent = 'العربية';
+                
+                document.querySelectorAll('.en').forEach(el => {
+                    if (!el.classList.contains('step')) {
+                        el.style.display = 'block';
+                    }
+                });
+                document.querySelectorAll('.step:not(.en)').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.step.en').forEach(el => el.style.display = 'flex');
+                
+                enterPlatformBtn.innerHTML = '<span>Enter Platform</span>';
+                showUrlBtn.innerHTML = '<span>Show URL</span>';
+                if (cancelBtn.style.display !== 'none') {
+                    cancelBtn.innerHTML = '<span>Cancel Countdown</span>';
+                }
+                backBtn.innerHTML = '<span>← Back</span><span class="en">← العودة</span>';
+            }
+        });
+        
+        let urlVisible = false;
+        showUrlBtn.addEventListener('click', function() {
+            urlVisible = !urlVisible;
+            
+            if (urlVisible) {
+                hiddenUrl.style.display = 'block';
+                if (isArabic) {
+                    showUrlBtn.innerHTML = '<span>إخفاء الرابط</span>';
+                } else {
+                    showUrlBtn.innerHTML = '<span>Hide URL</span>';
+                }
+            } else {
+                hiddenUrl.style.display = 'none';
+                if (isArabic) {
+                    showUrlBtn.innerHTML = '<span>إظهار الرابط</span>';
+                } else {
+                    showUrlBtn.innerHTML = '<span>Show URL</span>';
+                }
+            }
+        });
+        
+        enterPlatformBtn.addEventListener('click', function() {
+            enterPlatform();
+        });
+        
+        cancelBtn.addEventListener('click', function() {
+            cancelAutoRedirect();
+        });
+        
+        backBtn.addEventListener('click', function() {
+            platformFrame.style.display = 'none';
+            mainContainer.style.display = 'block';
+            
+            updateStep(2, 'completed', 
+                isArabic ? 'تم الدخول إلى المنصة' : 'Platform entered',
+                isArabic ? 'يمكنك العودة إلى المنصة في أي وقت' : 'You can return to platform anytime'
+            );
+            
+            if (isArabic) {
+                enterPlatformBtn.innerHTML = '<span>العودة إلى المنصة</span>';
+            } else {
+                enterPlatformBtn.innerHTML = '<span>Return to Platform</span>';
+            }
+        });
+        
+        function enterPlatform() {
+            updateStep(2, 'active', 
+                isArabic ? 'جاري تحميل المنصة...' : 'Loading platform...',
+                isArabic ? 'جاري فتح المنصة في هذه الصفحة' : 'Opening platform in this page'
+            );
+            
+            mainContainer.style.opacity = '0';
+            mainContainer.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                mainContainer.style.display = 'none';
+                platformFrame.style.display = 'block';
+                platformIframe.src = platformUrl;
+                
+                updateStep(2, 'completed', 
+                    isArabic ? 'تم الدخول إلى المنصة' : 'Platform entered',
+                    isArabic ? 'المنصة جاهزة للاستخدام' : 'Platform is ready to use'
+                );
+            }, 300);
+            
+            if (autoRedirectActive) {
+                cancelAutoRedirect();
+            }
+        }
+        
+        function updateStep(stepNumber, status, titleText, descText) {
+            const step = document.getElementById(`step${stepNumber}`);
+            const stepEn = document.getElementById(`step${stepNumber}-en`);
+            const stepDesc = document.getElementById(`step${stepNumber}-desc`);
+            const stepDescEn = document.getElementById(`step${stepNumber}-desc-en`);
+            
+            if (step) {
+                step.className = `step ${status}`;
+                stepEn.className = `step en ${status}`;
+                
+                if (stepDesc) stepDesc.textContent = descText;
+                if (stepDescEn) stepDescEn.textContent = descText;
+                
+                const icon = step.querySelector('.step-icon');
+                const iconEn = stepEn.querySelector('.step-icon');
+                
+                if (status === 'active') {
+                    icon.innerHTML = '<div class="loading"></div>';
+                    iconEn.innerHTML = '<div class="loading"></div>';
+                } else if (status === 'completed') {
+                    icon.textContent = '✓';
+                    iconEn.textContent = '✓';
+                } else if (status === 'failed') {
+                    icon.textContent = '✗';
+                    iconEn.textContent = '✗';
+                } else {
+                    icon.textContent = stepNumber;
+                    iconEn.textContent = stepNumber;
+                }
+            }
+        }
+        
+        function startAutoRedirect() {
+            countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                countdownEnElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    enterPlatform();
+                }
+            }, 1000);
+        }
+        
+        function cancelAutoRedirect() {
+            clearInterval(countdownInterval);
+            autoRedirectActive = false;
+            autoRedirectDiv.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            enterPlatformBtn.style.width = '100%';
+        }
+        
+        window.addEventListener('load', function() {
+            if (!navigator.onLine) {
+                updateStep(1, 'failed', 
+                    'فحص اتصال الإنترنت', 
+                    isArabic ? 'لا يوجد اتصال بالإنترنت' : 'No internet connection'
+                );
+                
+                updateStep(1, 'failed', 
+                    'Check Internet Connection', 
+                    isArabic ? 'لا يوجد اتصال بالإنترنت' : 'No internet connection'
+                );
+                
+                enterPlatformBtn.disabled = true;
+                enterPlatformBtn.style.backgroundColor = '#cccccc';
+                enterPlatformBtn.style.cursor = 'not-allowed';
+                
+                if (isArabic) {
+                    enterPlatformBtn.innerHTML = '<span>الاتصال بالإنترنت مطلوب</span>';
+                } else {
+                    enterPlatformBtn.innerHTML = '<span>Internet connection required</span>';
+                }
+                
+                autoRedirectDiv.style.display = 'none';
+            } else {
+                startAutoRedirect();
+                cancelBtn.style.display = 'flex';
+            }
+        });
+        
+        window.addEventListener('online', function() {
+            updateStep(1, 'completed', 
+                'فحص اتصال الإنترنت', 
+                isArabic ? 'الاتصال بالإنترنت نشط' : 'Internet connection is active'
+            );
+            
+            enterPlatformBtn.disabled = false;
+            enterPlatformBtn.style.backgroundColor = '';
+            enterPlatformBtn.style.cursor = '';
+            
+            if (isArabic) {
+                enterPlatformBtn.innerHTML = '<span>الدخول إلى المنصة</span>';
+            } else {
+                enterPlatformBtn.innerHTML = '<span>Enter Platform</span>';
+            }
+            
+            if (!autoRedirectActive) {
+                autoRedirectActive = true;
+                countdown = 10;
+                startAutoRedirect();
+                autoRedirectDiv.style.display = 'block';
+                cancelBtn.style.display = 'flex';
+            }
+        });
+        
+        window.addEventListener('offline', function() {
+            updateStep(1, 'failed', 
+                'فحص اتصال الإنترنت', 
+                isArabic ? 'فقد الاتصال بالإنترنت' : 'Lost internet connection'
+            );
+            
+            enterPlatformBtn.disabled = true;
+            enterPlatformBtn.style.backgroundColor = '#cccccc';
+            enterPlatformBtn.style.cursor = 'not-allowed';
+            
+            if (isArabic) {
+                enterPlatformBtn.innerHTML = '<span>الاتصال بالإنترنت مطلوب</span>';
+            } else {
+                enterPlatformBtn.innerHTML = '<span>Internet connection required</span>';
+            }
+            
+            cancelAutoRedirect();
+        });
+    </script>
+</body>
+</html>

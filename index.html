@@ -275,34 +275,8 @@
         
         .platform-info p {
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.5;
-        }
-        
-        .hidden-url {
-            font-family: monospace;
-            background-color: #e8f4ff;
-            padding: 12px;
-            border-radius: 5px;
-            margin: 10px 0;
-            word-break: break-all;
-            color: #2c3e50;
-            font-weight: 500;
-            border: 1px dashed #4a6fa5;
-            display: none;
-        }
-        
-        .show-url-btn {
-            background-color: transparent;
-            color: #4a6fa5;
-            border: 1px solid #4a6fa5;
-            padding: 8px 16px;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        
-        .show-url-btn:hover {
-            background-color: #e8f4ff;
         }
         
         .footer {
@@ -406,6 +380,7 @@
     </style>
 </head>
 <body>
+    <!-- إطار المنصة -->
     <div class="platform-frame" id="platformFrame">
         <div class="platform-header">
             <button class="back-btn" id="backBtn">
@@ -421,6 +396,7 @@
         <iframe id="platformIframe" title="منصة الأداء الأكاديمي" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
     </div>
     
+    <!-- الواجهة الرئيسية -->
     <div class="language-toggle">
         <button class="lang-btn" id="toggleLang">English</button>
     </div>
@@ -433,6 +409,7 @@
         
         <div class="content">
             <div class="progress-steps">
+                <!-- الخطوة 1: فحص الإنترنت -->
                 <div class="step completed" id="step1">
                     <div class="step-icon">✓</div>
                     <div class="step-info">
@@ -449,6 +426,7 @@
                     </div>
                 </div>
                 
+                <!-- الخطوة 2: الدخول إلى المنصة -->
                 <div class="step" id="step2">
                     <div class="step-icon">2</div>
                     <div class="step-info">
@@ -466,6 +444,7 @@
                 </div>
             </div>
             
+            <!-- معلومات المنصة (بدون زر إظهار الرابط) -->
             <div class="platform-info">
                 <h3>
                     <span>مرحباً بك في منصة متابعة الأداء الأكاديمي</span>
@@ -476,21 +455,16 @@
                     <span class="en">Smart platform for monitoring and evaluating academic performance. Click the button below to enter the platform directly.</span>
                 </p>
                 
-                <div class="hidden-url" id="hiddenUrl">
-                    https://course-pulse-1.preview.emergentagent.com/user
-                </div>
-                
-                <button class="show-url-btn" id="showUrlBtn">
-                    <span>إظهار الرابط</span>
-                    <span class="en">Show URL</span>
-                </button>
+                <!-- تم إزالة قسم الرابط المخفي وزر الإظهار تماماً -->
             </div>
             
+            <!-- العد التنازلي التلقائي -->
             <div class="auto-redirect" id="autoRedirect">
                 <span>سيتم الدخول تلقائياً خلال <span class="countdown" id="countdown">10</span> ثانية</span>
                 <span class="en" style="display: block; margin-top: 5px;">Auto-entry in <span class="countdown" id="countdown-en">10</span> seconds</span>
             </div>
             
+            <!-- أزرار التحكم -->
             <div class="controls">
                 <button class="btn-success" id="enterPlatformBtn">
                     <span>الدخول إلى المنصة</span>
@@ -503,6 +477,7 @@
             </div>
         </div>
         
+        <!-- التذييل -->
         <div class="footer">
             <p>منصة تقرير التقدم الدراسي - نظام متابعة وتقييم الأداء الأكاديمي الذكي</p>
             <p class="en">Academic Progress Report Platform - Smart Academic Performance Monitoring and Evaluation System</p>
@@ -510,25 +485,30 @@
     </div>
 
     <script>
+        // حالة اللغة (true = عربي, false = إنجليزي)
         let isArabic = true;
+        
+        // عناصر DOM
         const toggleLangBtn = document.getElementById('toggleLang');
         const enterPlatformBtn = document.getElementById('enterPlatformBtn');
         const cancelBtn = document.getElementById('cancelBtn');
         const countdownElement = document.getElementById('countdown');
         const countdownEnElement = document.getElementById('countdown-en');
         const autoRedirectDiv = document.getElementById('autoRedirect');
-        const showUrlBtn = document.getElementById('showUrlBtn');
-        const hiddenUrl = document.getElementById('hiddenUrl');
         const mainContainer = document.getElementById('mainContainer');
         const platformFrame = document.getElementById('platformFrame');
         const platformIframe = document.getElementById('platformIframe');
         const backBtn = document.getElementById('backBtn');
         
+        // متغيرات العد التنازلي
         let countdown = 10;
         let countdownInterval;
         let autoRedirectActive = true;
+        
+        // رابط المنصة (مخفي تماماً)
         const platformUrl = 'https://course-pulse-1.preview.emergentagent.com/user';
         
+        // تبديل اللغة
         toggleLangBtn.addEventListener('click', function() {
             isArabic = !isArabic;
             
@@ -537,6 +517,7 @@
                 document.documentElement.lang = 'ar';
                 toggleLangBtn.textContent = 'English';
                 
+                // إخفاء النصوص الإنجليزية وإظهار العربية
                 document.querySelectorAll('.en').forEach(el => {
                     if (!el.classList.contains('step')) {
                         el.style.display = 'none';
@@ -545,8 +526,8 @@
                 document.querySelectorAll('.step.en').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.step:not(.en)').forEach(el => el.style.display = 'flex');
                 
+                // تحديث نص الأزرار
                 enterPlatformBtn.innerHTML = '<span>الدخول إلى المنصة</span>';
-                showUrlBtn.innerHTML = '<span>إظهار الرابط</span>';
                 if (cancelBtn.style.display !== 'none') {
                     cancelBtn.innerHTML = '<span>إلغاء العد التنازلي</span>';
                 }
@@ -556,6 +537,7 @@
                 document.documentElement.lang = 'en';
                 toggleLangBtn.textContent = 'العربية';
                 
+                // إخفاء النصوص العربية وإظهار الإنجليزية
                 document.querySelectorAll('.en').forEach(el => {
                     if (!el.classList.contains('step')) {
                         el.style.display = 'block';
@@ -564,8 +546,8 @@
                 document.querySelectorAll('.step:not(.en)').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.step.en').forEach(el => el.style.display = 'flex');
                 
+                // تحديث نص الأزرار
                 enterPlatformBtn.innerHTML = '<span>Enter Platform</span>';
-                showUrlBtn.innerHTML = '<span>Show URL</span>';
                 if (cancelBtn.style.display !== 'none') {
                     cancelBtn.innerHTML = '<span>Cancel Countdown</span>';
                 }
@@ -573,44 +555,30 @@
             }
         });
         
-        let urlVisible = false;
-        showUrlBtn.addEventListener('click', function() {
-            urlVisible = !urlVisible;
-            
-            if (urlVisible) {
-                hiddenUrl.style.display = 'block';
-                if (isArabic) {
-                    showUrlBtn.innerHTML = '<span>إخفاء الرابط</span>';
-                } else {
-                    showUrlBtn.innerHTML = '<span>Hide URL</span>';
-                }
-            } else {
-                hiddenUrl.style.display = 'none';
-                if (isArabic) {
-                    showUrlBtn.innerHTML = '<span>إظهار الرابط</span>';
-                } else {
-                    showUrlBtn.innerHTML = '<span>Show URL</span>';
-                }
-            }
-        });
-        
+        // الدخول إلى المنصة
         enterPlatformBtn.addEventListener('click', function() {
             enterPlatform();
         });
         
+        // إلغاء العد التنازلي
         cancelBtn.addEventListener('click', function() {
             cancelAutoRedirect();
         });
         
+        // زر العودة من المنصة
         backBtn.addEventListener('click', function() {
+            // إخفاء إطار المنصة
             platformFrame.style.display = 'none';
+            // إظهار الواجهة الرئيسية
             mainContainer.style.display = 'block';
             
+            // تحديث حالة الخطوة الثانية
             updateStep(2, 'completed', 
                 isArabic ? 'تم الدخول إلى المنصة' : 'Platform entered',
                 isArabic ? 'يمكنك العودة إلى المنصة في أي وقت' : 'You can return to platform anytime'
             );
             
+            // تغيير نص الزر
             if (isArabic) {
                 enterPlatformBtn.innerHTML = '<span>العودة إلى المنصة</span>';
             } else {
@@ -618,31 +586,41 @@
             }
         });
         
+        // الدخول إلى المنصة
         function enterPlatform() {
+            // تحديث حالة الخطوة الثانية
             updateStep(2, 'active', 
                 isArabic ? 'جاري تحميل المنصة...' : 'Loading platform...',
                 isArabic ? 'جاري فتح المنصة في هذه الصفحة' : 'Opening platform in this page'
             );
             
+            // إخفاء الواجهة الرئيسية بانتقال سلس
             mainContainer.style.opacity = '0';
             mainContainer.style.transform = 'translateY(-20px)';
             
             setTimeout(() => {
                 mainContainer.style.display = 'none';
+                
+                // إظهار إطار المنصة
                 platformFrame.style.display = 'block';
+                
+                // تحميل الرابط في الإطار
                 platformIframe.src = platformUrl;
                 
+                // تحديث حالة الخطوة الثانية إلى مكتملة
                 updateStep(2, 'completed', 
                     isArabic ? 'تم الدخول إلى المنصة' : 'Platform entered',
                     isArabic ? 'المنصة جاهزة للاستخدام' : 'Platform is ready to use'
                 );
             }, 300);
             
+            // إيقاف العد التنازلي إذا كان نشطاً
             if (autoRedirectActive) {
                 cancelAutoRedirect();
             }
         }
         
+        // تحديث حالة الخطوة
         function updateStep(stepNumber, status, titleText, descText) {
             const step = document.getElementById(`step${stepNumber}`);
             const stepEn = document.getElementById(`step${stepNumber}-en`);
@@ -650,12 +628,15 @@
             const stepDescEn = document.getElementById(`step${stepNumber}-desc-en`);
             
             if (step) {
+                // تحديث الفئة
                 step.className = `step ${status}`;
                 stepEn.className = `step en ${status}`;
                 
+                // تحديث النصوص
                 if (stepDesc) stepDesc.textContent = descText;
                 if (stepDescEn) stepDescEn.textContent = descText;
                 
+                // تحديث الأيقونة
                 const icon = step.querySelector('.step-icon');
                 const iconEn = stepEn.querySelector('.step-icon');
                 
@@ -675,6 +656,7 @@
             }
         }
         
+        // بدء العد التنازلي التلقائي
         function startAutoRedirect() {
             countdownInterval = setInterval(() => {
                 countdown--;
@@ -688,16 +670,22 @@
             }, 1000);
         }
         
+        // إلغاء العد التنازلي
         function cancelAutoRedirect() {
             clearInterval(countdownInterval);
             autoRedirectActive = false;
             autoRedirectDiv.style.display = 'none';
             cancelBtn.style.display = 'none';
+            
+            // توسيع زر الدخول
             enterPlatformBtn.style.width = '100%';
         }
         
+        // فحص الاتصال بالإنترنت عند التحميل
         window.addEventListener('load', function() {
+            // فحص الاتصال بالإنترنت أولاً
             if (!navigator.onLine) {
+                // تحديث الخطوة الأولى إلى حالة الفشل
                 updateStep(1, 'failed', 
                     'فحص اتصال الإنترنت', 
                     isArabic ? 'لا يوجد اتصال بالإنترنت' : 'No internet connection'
@@ -708,6 +696,7 @@
                     isArabic ? 'لا يوجد اتصال بالإنترنت' : 'No internet connection'
                 );
                 
+                // تعطيل زر الدخول
                 enterPlatformBtn.disabled = true;
                 enterPlatformBtn.style.backgroundColor = '#cccccc';
                 enterPlatformBtn.style.cursor = 'not-allowed';
@@ -718,19 +707,26 @@
                     enterPlatformBtn.innerHTML = '<span>Internet connection required</span>';
                 }
                 
+                // إخفاء العد التنازلي
                 autoRedirectDiv.style.display = 'none';
             } else {
+                // بدء العد التنازلي التلقائي
                 startAutoRedirect();
+                
+                // إظهار زر الإلغاء
                 cancelBtn.style.display = 'flex';
             }
         });
         
+        // الاستماع لتغير حالة الاتصال
         window.addEventListener('online', function() {
+            // تحديث الخطوة الأولى إلى مكتملة
             updateStep(1, 'completed', 
                 'فحص اتصال الإنترنت', 
                 isArabic ? 'الاتصال بالإنترنت نشط' : 'Internet connection is active'
             );
             
+            // تمكين زر الدخول
             enterPlatformBtn.disabled = false;
             enterPlatformBtn.style.backgroundColor = '';
             enterPlatformBtn.style.cursor = '';
@@ -741,6 +737,7 @@
                 enterPlatformBtn.innerHTML = '<span>Enter Platform</span>';
             }
             
+            // بدء العد التنازلي إذا لم يكن نشطاً
             if (!autoRedirectActive) {
                 autoRedirectActive = true;
                 countdown = 10;
@@ -751,11 +748,13 @@
         });
         
         window.addEventListener('offline', function() {
+            // تحديث الخطوة الأولى إلى حالة الفشل
             updateStep(1, 'failed', 
                 'فحص اتصال الإنترنت', 
                 isArabic ? 'فقد الاتصال بالإنترنت' : 'Lost internet connection'
             );
             
+            // تعطيل زر الدخول
             enterPlatformBtn.disabled = true;
             enterPlatformBtn.style.backgroundColor = '#cccccc';
             enterPlatformBtn.style.cursor = 'not-allowed';
@@ -766,6 +765,7 @@
                 enterPlatformBtn.innerHTML = '<span>Internet connection required</span>';
             }
             
+            // إيقاف العد التنازلي
             cancelAutoRedirect();
         });
     </script>
